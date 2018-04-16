@@ -1,6 +1,6 @@
 import React, {ReactNode} from "react";
 import Header from "./components/Header";
-import ApiCalendar from "./components/ApiCalendar";
+import ApiCalendar from "./services/ApiCalendar";
 
 import './App.css';
 import 'semantic-ui-css/semantic.min.css';

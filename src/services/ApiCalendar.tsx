@@ -1,6 +1,6 @@
 let CLIENT_ID: string = "474857817188-o8gdccn66v5jbh6uarqod8jv1vfq2pl8.apps.googleusercontent.com";
 let API_KEY: string = "AIzaSyBNuPUopv37muXGvxuDCE7ShrFyPEw6JEM";
-let SCOPES: string = "https://www.googleapis.com/auth/calendar.readonly";
+let SCOPES: string = "https://www.googleapis.com/auth/calendar";
 let DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
 
 class ApiCalendar {
