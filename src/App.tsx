@@ -13,8 +13,8 @@ class App extends React.Component {
     }
     public getMsg(): void {
         if (ApiCalendar.sign)
-            ApiCalendar.listUpcomingEvents().then((result: any) => {
-               console.log(result);
+            ApiCalendar.listUpcomingEvents('primary', 10).then(({result}: any) => {
+               console.log(result.items);
             });
     }
 
