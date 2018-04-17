@@ -4,19 +4,22 @@ let SCOPES: string = "https://www.googleapis.com/auth/calendar";
 let DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
 
 interface options {
-   clientId: string,
-   apiKey: string,
-   scopes: string,
-   discoveryDocs: string[]
+    clientId: string,
+    apiKey: string,
+    scopes: string,
+    discoveryDocs: string[],
 }
 
 class ApiCalendar {
     sign: boolean = false;
+    calendar: string = '';
+    gapi: any = null;
+
     option: options = {
         clientId: '',
         apiKey: '',
         scopes: '',
-        discoveryDocs: []
+        discoveryDocs: [],
     };
 
     constructor() {
@@ -25,6 +28,9 @@ class ApiCalendar {
         this.handleSignoutClick = this.handleSignoutClick.bind(this);
         this.handleAuthClick = this.handleAuthClick.bind(this);
         this.setOptions = this.setOptions.bind(this);
+        this.createEvent = this.createEvent.bind(this);
+        this.listUpcomingEvents = this.listUpcomingEvents.bind(this);
+        this.createEventFromNow = this.createEventFromNow.bind(this);
 
         this.handleClientLoad();
     }
@@ -49,49 +55,34 @@ class ApiCalendar {
      * Sign in Google user account
      */
     public handleAuthClick(): void {
-        window['gapi'].auth2.getAuthInstance().signIn();
+        this.gapi.auth2.getAuthInstance().signIn();
     }
 
     /**
      * Sign out user google account
      */
     public handleSignoutClick(): void {
-        window['gapi'].auth2.getAuthInstance().signOut();
+        this.gapi.auth2.getAuthInstance().signOut();
         this.sign = false;
-    }
-
-    /**
-     * List all events in the calendar
-     * @param {string} calendarId to see
-     * @param {number} maxResults to see
-     * @returns {any}
-     */
-    public listUpcomingEvents(calendarId: string, maxResults: number): any {
-        return window['gapi'].client.calendar.events.list({
-            'calendarId': calendarId,
-            'timeMin': (new Date()).toISOString(),
-            'showDeleted': false,
-            'singleEvents': true,
-            'maxResults': maxResults,
-            'orderBy': 'startTime'
-        })
     }
 
     /**
      * Auth to the google Api.
      */
     private initClient(): void {
-        window['gapi'].client.init({
+        this.gapi = window['gapi'];
+        this.gapi.client.init({
             apiKey: API_KEY,
             clientId: CLIENT_ID,
             discoveryDocs: DISCOVERY_DOCS,
             scope: SCOPES
-        }).then(() => {
-            // Listen for sign-in state changes.
-            window['gapi'].auth2.getAuthInstance().isSignedIn.listen(this.updateSigninStatus);
-            // Handle the initial sign-in state.
-            this.updateSigninStatus(window['gapi'].auth2.getAuthInstance().isSignedIn.get());
-        });
+        })
+            .then(() => {
+                // Listen for sign-in state changes.
+                this.gapi.auth2.getAuthInstance().isSignedIn.listen(this.updateSigninStatus);
+                // Handle the initial sign-in state.
+                this.updateSigninStatus(this.gapi.auth2.getAuthInstance().isSignedIn.get());
+            })
     }
 
     /**
@@ -105,6 +96,64 @@ class ApiCalendar {
         script.onload = (): void => {
             window['gapi'].load('client:auth2', this.initClient);
         }
+    }
+
+    /**
+     * List all events in the calendar
+     * @param {string} calendarId to see
+     * @param {number} maxResults to see
+     * @returns {any}
+     */
+    public listUpcomingEvents(calendarId: string, maxResults: number): any {
+        return this.gapi.client.calendar.events.list({
+            'calendarId': calendarId,
+            'timeMin': (new Date()).toISOString(),
+            'showDeleted': false,
+            'singleEvents': true,
+            'maxResults': maxResults,
+            'orderBy': 'startTime'
+        })
+    }
+
+    /**
+     * Create an event from the current time for a certain period
+     * @param {string} calendarId
+     * @param {number} time in minutes for the event
+     * @param {string} summary of the event
+     * @param {string} description of the event
+     * @returns {any}
+     */
+    public createEventFromNow(calendarId: string, {time, summary, description = ''}: any): any {
+        const event = {
+            summary,
+            description,
+            start: {
+                dateTime: (new Date()).toISOString(),
+                timeZone: "Europe/Paris",
+            },
+            end: {
+                dateTime: (new Date(new Date().getTime() + time * 60000)),
+                timeZone: "Europe/Paris",
+            }
+        };
+
+        return this.gapi.client.calendar.events.insert({
+            'calendarId': calendarId,
+            'resource': event,
+        });
+    }
+
+    /**
+     * Create Calendar event
+     * @param {string} calendarId for the event.
+     * @param {object} event with start and end dateTime
+     * @returns {any}
+     */
+    public createEvent(calendarId: string, event: object): any {
+        return this.gapi.client.calendar.events.insert({
+            'calendarId': calendarId,
+            'resource': event,
+        });
     }
 }
 
