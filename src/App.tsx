@@ -8,23 +8,8 @@ import {Button} from "semantic-ui-react";
 
 let eventFromNow: object = {
     summary: "Poc Dev From Now",
-    time: 35,
+    time: 480,
 };
-
-/*
-let event: object = {
-    summary: 'PoC dev Test',
-    description: 'Test for dev project',
-    start: {
-        dateTime: '2018-04-17T14:00:00+02:00',
-        timeZone: 'Europe/Paris'
-    },
-    end: {
-        dateTime: '2018-04-17T17:00:00+02:00',
-        timeZone: 'Europe/Paris'
-    },
-};
-*/
 
 class App extends React.Component {
     constructor(props: any) {
