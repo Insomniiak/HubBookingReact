@@ -3,6 +3,7 @@ const Config = require("./apiGoogleconfig.json");
 class ApiCalendar {
     sign: boolean = false;
     gapi: any = null;
+    onLoadCallback: any = null;
 
     constructor() {
         this.updateSigninStatus = this.updateSigninStatus.bind(this);
@@ -12,6 +13,8 @@ class ApiCalendar {
         this.createEvent = this.createEvent.bind(this);
         this.listUpcomingEvents = this.listUpcomingEvents.bind(this);
         this.createEventFromNow = this.createEventFromNow.bind(this);
+        this.listen = this.listen.bind(this);
+        this.onLoad = this.onLoad.bind(this);
 
         this.handleClientLoad();
     }
@@ -25,21 +28,6 @@ class ApiCalendar {
     }
 
     /**
-     * Sign in Google user account
-     */
-    public handleAuthClick(): void {
-        this.gapi.auth2.getAuthInstance().signIn();
-    }
-
-    /**
-     * Sign out user google account
-     */
-    public handleSignoutClick(): void {
-        this.gapi.auth2.getAuthInstance().signOut();
-        this.sign = false;
-    }
-
-    /**
      * Auth to the google Api.
      */
     private initClient(): void {
@@ -50,8 +38,32 @@ class ApiCalendar {
                 this.gapi.auth2.getAuthInstance().isSignedIn.listen(this.updateSigninStatus);
                 // Handle the initial sign-in state.
                 this.updateSigninStatus(this.gapi.auth2.getAuthInstance().isSignedIn.get());
+                this.onLoadCallback();
             })
-   }
+    }
+
+    /**
+     * Sign in Google user account
+     */
+    public handleAuthClick(): void {
+        this.gapi.auth2.getAuthInstance().signIn();
+    }
+
+    public listen(callback: any): void {
+        this.gapi.auth2.getAuthInstance().isSignedIn.listen(callback);
+    }
+
+    public onLoad(callback: any): void {
+        this.onLoadCallback = callback;
+    }
+
+    /**
+     * Sign out user google account
+     */
+    public handleSignoutClick(): void {
+        this.gapi.auth2.getAuthInstance().signOut();
+    }
+
 
     /**
      * Init Google Api

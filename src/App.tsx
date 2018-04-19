@@ -17,6 +17,7 @@ class App extends React.Component {
         this.getMsg = this.getMsg.bind(this);
         this.createEv = this.createEv.bind(this);
     }
+
     public getMsg(): void {
         if (ApiCalendar.sign)
             ApiCalendar.listUpcomingEvents('primary', 10)
