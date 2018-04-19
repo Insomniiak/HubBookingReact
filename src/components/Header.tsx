@@ -18,7 +18,6 @@ export default class Header extends React.Component<any, any> {
     }
 
     public signUpdate(sign: boolean): any {
-        console.log(sign);
         this.setState({
             sign
         })
@@ -31,7 +30,6 @@ export default class Header extends React.Component<any, any> {
         } else if (name === 'sign-out') {
             ApiCalendar.handleSignoutClick();
         }
-
         this.setState({
             activeItem: name,
         })

@@ -55,6 +55,10 @@ class ApiCalendar {
         }
     }
 
+    /**
+     * Execute the callback function when a user is disconnected or connected with the sign status.
+     * @param callback
+     */
     public listenSign(callback: any): void {
         if (this.gapi) {
             this.gapi.auth2.getAuthInstance().isSignedIn.listen(callback);
@@ -63,6 +67,10 @@ class ApiCalendar {
         }
     }
 
+    /**
+     * Execute the callback function when gapi is loaded
+     * @param callback
+     */
     public onLoad(callback: any): void {
         if (this.gapi) {
             callback();
