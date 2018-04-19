@@ -13,7 +13,7 @@ class ApiCalendar {
         this.createEvent = this.createEvent.bind(this);
         this.listUpcomingEvents = this.listUpcomingEvents.bind(this);
         this.createEventFromNow = this.createEventFromNow.bind(this);
-        this.listen = this.listen.bind(this);
+        this.listenSign = this.listenSign.bind(this);
         this.onLoad = this.onLoad.bind(this);
 
         this.handleClientLoad();
@@ -38,7 +38,9 @@ class ApiCalendar {
                 this.gapi.auth2.getAuthInstance().isSignedIn.listen(this.updateSigninStatus);
                 // Handle the initial sign-in state.
                 this.updateSigninStatus(this.gapi.auth2.getAuthInstance().isSignedIn.get());
-                this.onLoadCallback();
+                if (this.onLoadCallback) {
+                    this.onLoadCallback();
+                }
             })
     }
 
@@ -46,22 +48,38 @@ class ApiCalendar {
      * Sign in Google user account
      */
     public handleAuthClick(): void {
-        this.gapi.auth2.getAuthInstance().signIn();
+        if (this.gapi) {
+            this.gapi.auth2.getAuthInstance().signIn();
+        } else {
+            console.log("Error: this.gapi not loaded")
+        }
     }
 
-    public listen(callback: any): void {
-        this.gapi.auth2.getAuthInstance().isSignedIn.listen(callback);
+    public listenSign(callback: any): void {
+        if (this.gapi) {
+            this.gapi.auth2.getAuthInstance().isSignedIn.listen(callback);
+        } else {
+            console.log("Error: this.gapi not loaded")
+        }
     }
 
     public onLoad(callback: any): void {
-        this.onLoadCallback = callback;
+        if (this.gapi) {
+            callback();
+        } else {
+            this.onLoadCallback = callback;
+        }
     }
 
     /**
      * Sign out user google account
      */
     public handleSignoutClick(): void {
-        this.gapi.auth2.getAuthInstance().signOut();
+        if (this.gapi) {
+            this.gapi.auth2.getAuthInstance().signOut();
+        } else {
+            console.log("Error: this.gapi not loaded");
+        }
     }
 
 
@@ -85,14 +103,19 @@ class ApiCalendar {
      * @returns {any}
      */
     public listUpcomingEvents(calendarId: string, maxResults: number): any {
-        return this.gapi.client.calendar.events.list({
-            'calendarId': calendarId,
-            'timeMin': (new Date()).toISOString(),
-            'showDeleted': false,
-            'singleEvents': true,
-            'maxResults': maxResults,
-            'orderBy': 'startTime'
-        })
+        if (this.gapi) {
+            return this.gapi.client.calendar.events.list({
+                'calendarId': calendarId,
+                'timeMin': (new Date()).toISOString(),
+                'showDeleted': false,
+                'singleEvents': true,
+                'maxResults': maxResults,
+                'orderBy': 'startTime'
+            })
+        } else {
+            console.log("Error: this.gapi not loaded");
+            return false
+        }
     }
 
     /**

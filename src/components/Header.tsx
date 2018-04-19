@@ -13,7 +13,7 @@ export default class Header extends React.Component<any, any> {
         this.handleItemClick = this.handleItemClick.bind(this);
         this.signUpdate = this.signUpdate.bind(this);
         ApiCalendar.onLoad(() => {
-            ApiCalendar.listen(this.signUpdate);
+            ApiCalendar.listenSign(this.signUpdate);
         });
     }
 
