@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "npm": "^5.8.0",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
+    "react-google-calendar-api": "^1.0.0",
     "react-redux": "^5.0.7",
     "react-scripts-ts": "2.15.1",
     "semantic-ui-css": "^2.3.1",

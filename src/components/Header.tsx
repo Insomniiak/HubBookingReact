@@ -1,6 +1,6 @@
 import React, {ReactNode, SyntheticEvent} from "react";
 import {Menu} from "semantic-ui-react";
-import ApiCalendar from "../services/ApiCalendar";
+import ApiCalendar from "react-google-calendar-api";
 
 export default class Header extends React.Component<any, any> {
     constructor(props: object) {

@@ -1,6 +1,6 @@
 import React, {ReactNode} from "react";
 import Header from "./components/Header";
-import ApiCalendar from "./services/ApiCalendar";
+import ApiCalendar from "react-google-calendar-api";
 
 import './App.css';
 import 'semantic-ui-css/semantic.min.css';
@@ -20,14 +20,14 @@ class App extends React.Component {
 
     public getMsg(): void {
         if (ApiCalendar.sign)
-            ApiCalendar.listUpcomingEvents('primary', 10)
+            ApiCalendar.listUpcomingEvents(10)
                 .then(({result}: any) => {
                     console.log(result.items);
                 });
     }
 
     public createEv(): void {
-        ApiCalendar.createEventFromNow('primary', eventFromNow)
+        ApiCalendar.createEventFromNow(eventFromNow)
             .then((result: object) => {
                 console.log(result);
             })
